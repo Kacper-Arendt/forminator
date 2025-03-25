@@ -1,15 +1,15 @@
 {
-  "manifest_version": 3,
-  "name": "Forminator",
-  "version": "1.0",
-  "description": "Forminator is a form filler extension",
-  "action": {
-    "default_popup": "index.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
-    }
-  },
-  "host_permissions": ["<all_urls>"]
+	"manifest_version": 3,
+	"name": "Forminator",
+	"version": "1.0",
+	"description": "Forminator is a form filler extension",
+	"action": {
+		"default_popup": "index.html",
+		"default_icon": {
+			"16": "icon.png",
+			"48": "icon.png",
+			"128": "icon.png"
+		}
+	},
+	"host_permissions": ["<all_urls>"]
 }
