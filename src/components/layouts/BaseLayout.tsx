@@ -1,8 +1,8 @@
 import type {ReactNode} from "react";
 
-export const BaseLayout = ({height, children}: {height: number, children: ReactNode}) =>
+export const BaseLayout = ({children}: {children: ReactNode}) =>
     (
-        <div style={{height}}>
+        <div className="max-h-250 overflow-auto">
             {children}
         </div>
     )

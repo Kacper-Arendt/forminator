@@ -11,7 +11,7 @@ import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 
 import "./styles.css";
-import {Main} from "@/routes/main";
+import Main from "@/routes/main";
 import reportWebVitals from "./reportWebVitals.ts";
 import Settings from "@/routes/settings";
 
