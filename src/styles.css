@@ -4,18 +4,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@font-face{
+@font-face {
 	font-family: "Roboto";
-	src:local("Roboto"),
-	url('./assets/fonts/Roboto.ttf');
+	src: local("Roboto"), url("./assets/fonts/Roboto.ttf");
 }
 
 body {
 	@apply m-0;
-	font-family: 'Roboto', sans-serif;
+	font-family: "Roboto", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	letter-spacing: 0.5px
+	letter-spacing: 0.5px;
 }
 
 :root {
@@ -40,7 +39,6 @@ body {
 	--ring: oklch(0.61 0.24 10.2);
 	--radius: 0.75rem;
 	--header-background: var(--background);
-	
 }
 
 .dark {
@@ -65,7 +63,6 @@ body {
 	--ring: oklch(0.442 0.017 285.786);
 	--header-background: oklch(0.141 0.005 285.823);
 }
-
 
 @theme inline {
 	--color-background: var(--background);
