@@ -35,7 +35,13 @@ export const useFill = () => {
 					const getRandomItem = (array: string[]) =>
 						array[Math.floor(Math.random() * array.length)];
 
-					const getText = () => getRandomItem(texts);
+					const getText = (count = 2) => {
+						const text = [];
+						for (let i = 0; i < count; i++) {
+							text.push(getRandomItem(texts));
+						}
+						return text.join(" ");
+					};
 					const getFirstName = () => getRandomItem(firstNames);
 					const getLastName = () => getRandomItem(lastNames);
 					const getPhoneNumber = () => getRandomItem(phoneNumbers);
@@ -57,11 +63,27 @@ export const useFill = () => {
 						}
 					};
 
+					const fillFileInput = (input: HTMLInputElement) => {
+						try {
+							const file = new File([getText(10)], `${getText(1)}.txt`, {
+								type: "text/plain",
+							});
+							const dataTransfer = new DataTransfer();
+							dataTransfer.items.add(file);
+							input.files = dataTransfer.files;
+							input.dispatchEvent(new Event("change", { bubbles: true }));
+						} catch (e) {
+							console.log(e);
+							return null;
+						}
+					};
+
 					const sortInputs = (inputs: NodeListOf<HTMLInputElement>) => {
 						const categorizedInputs = {
 							text: [] as HTMLInputElement[],
 							email: [] as HTMLInputElement[],
 							phone: [] as HTMLInputElement[],
+							file: [] as HTMLInputElement[],
 							other: [] as HTMLInputElement[],
 						};
 
@@ -75,6 +97,9 @@ export const useFill = () => {
 									break;
 								case "text":
 									categorizedInputs.text.push(input);
+									break;
+								case "file":
+									categorizedInputs.file.push(input);
 									break;
 								default:
 									categorizedInputs.other.push(input);
@@ -126,6 +151,7 @@ export const useFill = () => {
 								fillInput(e, getPhoneNumber()),
 							);
 							categorizedInputs.other.forEach((e) => fillInput(e, getText()));
+							categorizedInputs.file.forEach((e) => fillFileInput(e));
 						} catch (e) {
 							console.log(e);
 							return null;
