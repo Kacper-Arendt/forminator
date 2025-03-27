@@ -45,11 +45,11 @@ export const useFill = () => {
 					const getFirstName = () => getRandomItem(firstNames);
 					const getLastName = () => getRandomItem(lastNames);
 					const getPhoneNumber = () => getRandomItem(phoneNumbers);
-					const getEmail = (domain = "formtripper.com") => {
-						const firstName = getFirstName().toLowerCase();
-						const lastName = getLastName().toLowerCase();
-						return `${firstName}.${lastName}@${domain}`;
-					};
+					// const getEmail = (domain = "formtripper.com") => {
+					// 	const firstName = getFirstName().toLowerCase();
+					// 	const lastName = getLastName().toLowerCase();
+					// 	return `${firstName}.${lastName}@${domain}`;
+					// };
 
 					const fillInput = (input: HTMLInputElement, value: string) => {
 						try {
@@ -63,11 +63,15 @@ export const useFill = () => {
 						}
 					};
 
-					const fillFileInput = (input: HTMLInputElement) => {
+					const fillFileInput = (input: HTMLInputElement, name: string) => {
 						try {
-							const file = new File([getText(10)], `${getText(1)}.txt`, {
-								type: "text/plain",
-							});
+							const file = new File(
+								[getText(10)],
+								`${name ?? getText(1)}.txt`,
+								{
+									type: "text/plain",
+								},
+							);
 							const dataTransfer = new DataTransfer();
 							dataTransfer.items.add(file);
 							input.files = dataTransfer.files;
@@ -77,6 +81,24 @@ export const useFill = () => {
 							return null;
 						}
 					};
+
+					const createUser = () => {
+						const firstName = getFirstName();
+						const lastName = getLastName();
+						const fullName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+						const email = `${fullName}@formtripper.com`;
+						const phoneNumber = getPhoneNumber();
+
+						return {
+							firstName,
+							lastName,
+							email,
+							phoneNumber,
+							fullName,
+						};
+					};
+
+					const user = structuredClone(createUser());
 
 					const sortInputs = (inputs: NodeListOf<HTMLInputElement>) => {
 						const categorizedInputs = {
@@ -116,18 +138,22 @@ export const useFill = () => {
 								case "phone":
 								case "phone_number":
 								case "phone-number":
-									return getPhoneNumber();
+									return user.phoneNumber;
+
+								case "firstName":
+								case "firstname":
 								case "first_name":
 								case "name":
 								case "first-name":
 								case "user-name":
 								case "username":
-									return getFirstName();
+									return user.firstName;
 
+								case "lastName":
 								case "last_name":
 								case "surname":
 								case "last-name":
-									return getLastName();
+									return user.lastName;
 								default:
 									return getText();
 							}
@@ -146,37 +172,22 @@ export const useFill = () => {
 							categorizedInputs.text.forEach((e) =>
 								fillInput(e, getTextForTextInput(e)),
 							);
-							categorizedInputs.email.forEach((e) => fillInput(e, getEmail()));
+							categorizedInputs.email.forEach((e) => fillInput(e, user.email));
 							categorizedInputs.phone.forEach((e) =>
-								fillInput(e, getPhoneNumber()),
+								fillInput(e, user.phoneNumber),
 							);
 							categorizedInputs.other.forEach((e) => fillInput(e, getText()));
-							categorizedInputs.file.forEach((e) => fillFileInput(e));
+							categorizedInputs.file.forEach((e) =>
+								fillFileInput(e, user.fullName),
+							);
 						} catch (e) {
 							console.log(e);
 							return null;
 						}
 					};
 
-					// const fillEmailInput = () => {
-					// 	const emailInput = document.querySelector(
-					// 		'input[type="email"]',
-					// 	) as HTMLInputElement;
-					// 	if (emailInput) {
-					// 		console.log("emailInput", emailInput);
-					// 		emailInput.focus();
-					// 		emailInput.setAttribute("value", "dupa@dupa.com");
-					// 		emailInput.dispatchEvent(new Event("change", { bubbles: true }));
-					// 		emailInput.dispatchEvent(new Event("blur", { bubbles: true }));
-					// 	} else {
-					// 		console.log("No email input found");
-					// 	}
-					// };
-
 					const inputs = document.querySelectorAll("input");
 					fillInputs(inputs);
-
-					// fillEmailInput();
 				},
 			});
 		} catch (e) {
