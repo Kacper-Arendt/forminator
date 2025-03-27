@@ -11,18 +11,12 @@
 			"128": "icon.png"
 		}
 	},
-	"permissions": [
-		"activeTab",
-		"storage"
-	],
-	"host_permissions": [
-		"<all_urls>"
-	],
+	"permissions": ["activeTab", "storage", "scripting"],
+	"host_permissions": ["<all_urls>"],
 	"icons": {
 		"16": "icon.png",
 		"48": "icon.png",
 		"128": "icon.png"
 	},
-	"theme_color": "#000",
 	"author": "Kacper Arendt"
 }
