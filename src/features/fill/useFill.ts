@@ -1,3 +1,11 @@
+interface User {
+	firstName: string;
+	lastName: string;
+	email: string;
+	phoneNumber: string;
+	fullName: string;
+}
+
 export const useFill = () => {
 	// const getBrowserInstance = (): typeof chrome => {
 	// 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -18,19 +26,43 @@ export const useFill = () => {
 				console.log("No tab found");
 				return;
 			}
+			const firstNames = ["John", "Jane", "Alice", "Bob", "Monika"];
+			const lastNames = ["Doe", "Smith", "Johnson", "Brown"];
+			const phoneNumbers = [
+				"1234567890",
+				"9876543210",
+				"5555555555",
+				"4444444444",
+			];
+			const texts = ["Hello", "World", "Foo", "Bar"];
+			const getRandomItem = (array: string[]) =>
+				array[Math.floor(Math.random() * array.length)];
+			const getFirstName = () => getRandomItem(firstNames);
+			const getLastName = () => getRandomItem(lastNames);
+			const getPhoneNumber = () => getRandomItem(phoneNumbers);
+
+			const createUser = () => {
+				const firstName = getFirstName();
+				const lastName = getLastName();
+				const fullName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+				const email = `${fullName}@formtripper.com`;
+				const phoneNumber = getPhoneNumber();
+
+				return {
+					firstName,
+					lastName,
+					email,
+					phoneNumber,
+					fullName,
+				};
+			};
+			const user: User = structuredClone(createUser());
 
 			await chrome.scripting.executeScript({
 				target: { tabId: tab.id },
-				func: () => {
-					const firstNames = ["John", "Jane", "Alice", "Bob", "Monika"];
-					const lastNames = ["Doe", "Smith", "Johnson", "Brown"];
-					const phoneNumbers = [
-						"1234567890",
-						"9876543210",
-						"5555555555",
-						"4444444444",
-					];
-					const texts = ["Hello", "World", "Foo", "Bar"];
+				args: [user, texts],
+				func: (user: User, texts: string[]) => {
+					// const firstNames = ["John", "Jane", "Alice", "Bob", "Monika"];
 
 					const getRandomItem = (array: string[]) =>
 						array[Math.floor(Math.random() * array.length)];
@@ -42,14 +74,9 @@ export const useFill = () => {
 						}
 						return text.join(" ");
 					};
-					const getFirstName = () => getRandomItem(firstNames);
-					const getLastName = () => getRandomItem(lastNames);
-					const getPhoneNumber = () => getRandomItem(phoneNumbers);
-					// const getEmail = (domain = "formtripper.com") => {
-					// 	const firstName = getFirstName().toLowerCase();
-					// 	const lastName = getLastName().toLowerCase();
-					// 	return `${firstName}.${lastName}@${domain}`;
-					// };
+					// const getFirstName = () => getRandomItem(firstNames);
+					// const getLastName = () => getRandomItem(lastNames);
+					// const getPhoneNumber = () => getRandomItem(phoneNumbers);
 
 					const fillInput = (input: HTMLInputElement, value: string) => {
 						try {
@@ -82,23 +109,23 @@ export const useFill = () => {
 						}
 					};
 
-					const createUser = () => {
-						const firstName = getFirstName();
-						const lastName = getLastName();
-						const fullName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
-						const email = `${fullName}@formtripper.com`;
-						const phoneNumber = getPhoneNumber();
+					// const createUser = () => {
+					// 	const firstName = getFirstName();
+					// 	const lastName = getLastName();
+					// 	const fullName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+					// 	const email = `${fullName}@formtripper.com`;
+					// 	const phoneNumber = getPhoneNumber();
+					//
+					// 	return {
+					// 		firstName,
+					// 		lastName,
+					// 		email,
+					// 		phoneNumber,
+					// 		fullName,
+					// 	};
+					// };
 
-						return {
-							firstName,
-							lastName,
-							email,
-							phoneNumber,
-							fullName,
-						};
-					};
-
-					const user = structuredClone(createUser());
+					// const user = structuredClone(createUser());
 
 					const sortInputs = (inputs: NodeListOf<HTMLInputElement>) => {
 						const categorizedInputs = {
@@ -154,6 +181,8 @@ export const useFill = () => {
 								case "surname":
 								case "last-name":
 									return user.lastName;
+								case "repeatEmail":
+									return user.email;
 								default:
 									return getText();
 							}
