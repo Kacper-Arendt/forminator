@@ -1,10 +1,10 @@
 import {
+	Navigate,
 	Outlet,
 	RouterProvider,
 	createRootRoute,
 	createRoute,
 	createRouter,
-	Navigate,
 } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -13,12 +13,13 @@ import Header from "./components/Header";
 
 import "./styles.css";
 import Main from "@/routes/main";
-import reportWebVitals from "./reportWebVitals.ts";
 import Settings from "@/routes/settings";
+import { ThemeProvider } from "./features/settings/components/theme-provider.tsx";
+import reportWebVitals from "./reportWebVitals.ts";
 
 const rootRoute = createRootRoute({
 	component: () => (
-		<main className="w-[350px] dark bg-background">
+		<main className="w-[350px] bg-background">
 			<Header />
 			<div className="p-2">
 				<Outlet />
@@ -56,7 +57,9 @@ if (rootElement && !rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<RouterProvider router={router} />
+			<ThemeProvider defaultTheme="dark" storageKey="formtripper-theme">
+				<RouterProvider router={router} />
+			</ThemeProvider>
 		</StrictMode>,
 	);
 }

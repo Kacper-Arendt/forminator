@@ -1,5 +1,6 @@
 import { lastNames } from "@/features/fill/helpers/data/lastNames";
 import { phoneNumbers } from "@/features/fill/helpers/data/phoneNumbers";
+import { useAppConfig } from "@/features/settings/useAppConfig";
 import { firstNames } from "./helpers/data/firstNames";
 import { texts } from "./helpers/data/texts";
 
@@ -12,12 +13,7 @@ interface User {
 }
 
 export const useFill = () => {
-	// const getBrowserInstance = (): typeof chrome => {
-	// 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	// 	const browserInstance = window.chrome || (window as any).browser;
-	// 	return browserInstance;
-	// };
-
+	const appConfig = useAppConfig();
 	const getCurrentTab = async () => {
 		const queryOptions = { active: true, lastFocusedWindow: true };
 		const [tab] = await chrome.tabs.query(queryOptions);
@@ -41,7 +37,7 @@ export const useFill = () => {
 				const firstName = getFirstName();
 				const lastName = getLastName();
 				const fullName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
-				const email = `${fullName}@formtripper.com`;
+				const email = `${fullName}@${appConfig?.domain ?? "formtripper.com"}`;
 				const phoneNumber = getPhoneNumber();
 
 				return {
@@ -54,11 +50,16 @@ export const useFill = () => {
 			};
 			const user: User = structuredClone(createUser());
 			const textsArr = structuredClone([...texts]);
+			const config = { submitForm: appConfig.submitForm };
 
 			await chrome.scripting.executeScript({
 				target: { tabId: tab.id },
-				args: [user, textsArr],
-				func: (user: User, textsArr: string[]) => {
+				args: [user, textsArr, config],
+				func: (
+					user: User,
+					textsArr: string[],
+					config: { submitForm: boolean },
+				) => {
 					//#region Inputs
 					const getRandomItem = (array: string[]) =>
 						array[Math.floor(Math.random() * array.length)];
@@ -193,6 +194,11 @@ export const useFill = () => {
 
 					const inputs = document.querySelectorAll("input");
 					fillInputs(inputs);
+
+					const submitButton = document.querySelector("button[type=submit]");
+					if (config.submitForm) {
+						submitButton?.dispatchEvent(new Event("click", { bubbles: true }));
+					}
 				},
 			});
 		} catch (e) {

@@ -5,11 +5,10 @@ export const Fill = () => {
 	const { fillForm } = useFill();
 
 	return (
-		<>
-			<p className="text-primary">Main</p>
+		<div className="px-2 py-4">
 			<Button className="w-full" onClick={fillForm}>
 				Fill form
 			</Button>
-		</>
+		</div>
 	);
 };

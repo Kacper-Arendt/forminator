@@ -1,18 +1,19 @@
 import { createRoute } from "@tanstack/react-router";
 
-import type { RootRoute } from "@tanstack/react-router";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
+import { Settings } from "@/features/settings/Settings";
+import type { RootRoute } from "@tanstack/react-router";
 
-const Settings = () => {
+const SettingsWrapper = () => {
 	return (
 		<BaseLayout>
-			<p className="text-primary">Settings</p>
+			<Settings />
 		</BaseLayout>
 	);
 };
 export default (parentRoute: RootRoute) =>
 	createRoute({
 		path: "/settings",
-		component: Settings,
+		component: SettingsWrapper,
 		getParentRoute: () => parentRoute,
 	});
