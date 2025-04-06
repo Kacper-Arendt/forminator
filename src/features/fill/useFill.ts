@@ -1,3 +1,8 @@
+import { lastNames } from "@/features/fill/helpers/data/lastNames";
+import { phoneNumbers } from "@/features/fill/helpers/data/phoneNumbers";
+import { firstNames } from "./helpers/data/firstNames";
+import { texts } from "./helpers/data/texts";
+
 interface User {
 	firstName: string;
 	lastName: string;
@@ -26,15 +31,6 @@ export const useFill = () => {
 				console.log("No tab found");
 				return;
 			}
-			const firstNames = ["John", "Jane", "Alice", "Bob", "Monika"];
-			const lastNames = ["Doe", "Smith", "Johnson", "Brown"];
-			const phoneNumbers = [
-				"1234567890",
-				"9876543210",
-				"5555555555",
-				"4444444444",
-			];
-			const texts = ["Hello", "World", "Foo", "Bar"];
 			const getRandomItem = (array: string[]) =>
 				array[Math.floor(Math.random() * array.length)];
 			const getFirstName = () => getRandomItem(firstNames);
@@ -57,26 +53,23 @@ export const useFill = () => {
 				};
 			};
 			const user: User = structuredClone(createUser());
+			const textsArr = structuredClone([...texts]);
 
 			await chrome.scripting.executeScript({
 				target: { tabId: tab.id },
-				args: [user, texts],
-				func: (user: User, texts: string[]) => {
-					// const firstNames = ["John", "Jane", "Alice", "Bob", "Monika"];
-
+				args: [user, textsArr],
+				func: (user: User, textsArr: string[]) => {
+					//#region Inputs
 					const getRandomItem = (array: string[]) =>
 						array[Math.floor(Math.random() * array.length)];
 
 					const getText = (count = 2) => {
 						const text = [];
 						for (let i = 0; i < count; i++) {
-							text.push(getRandomItem(texts));
+							text.push(getRandomItem(textsArr));
 						}
 						return text.join(" ");
 					};
-					// const getFirstName = () => getRandomItem(firstNames);
-					// const getLastName = () => getRandomItem(lastNames);
-					// const getPhoneNumber = () => getRandomItem(phoneNumbers);
 
 					const fillInput = (input: HTMLInputElement, value: string) => {
 						try {
@@ -108,24 +101,6 @@ export const useFill = () => {
 							return null;
 						}
 					};
-
-					// const createUser = () => {
-					// 	const firstName = getFirstName();
-					// 	const lastName = getLastName();
-					// 	const fullName = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
-					// 	const email = `${fullName}@formtripper.com`;
-					// 	const phoneNumber = getPhoneNumber();
-					//
-					// 	return {
-					// 		firstName,
-					// 		lastName,
-					// 		email,
-					// 		phoneNumber,
-					// 		fullName,
-					// 	};
-					// };
-
-					// const user = structuredClone(createUser());
 
 					const sortInputs = (inputs: NodeListOf<HTMLInputElement>) => {
 						const categorizedInputs = {
@@ -214,6 +189,7 @@ export const useFill = () => {
 							return null;
 						}
 					};
+					//#endregion
 
 					const inputs = document.querySelectorAll("input");
 					fillInputs(inputs);
