@@ -26,7 +26,7 @@ export const TotalCount = ({ refreshKey }: { refreshKey: number }) => {
 	}, [refreshKey]);
 
 	return (
-		<p className="mt-2 min-h-4">
+		<p className="mt-2 min-h-5">
 			{total === undefined ? (
 				""
 			) : (
